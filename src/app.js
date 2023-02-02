@@ -1,8 +1,10 @@
 require('dotenv').config()
+require('express-async-errors') //hjälper till med att wrappa och fånga upp errors istället för att ha try/catch i våra controllers
 const express = require('express')
 const mongoose = require('mongoose')
 const todoRoutes = require('./routes/todoRoutes')
 const path = require('path')
+const { json } = require('express')
 
 // 1.skapa våran express app
 const app = express() //innehåller alla methods vi kommer använda efteråt
@@ -21,9 +23,17 @@ app.use((req, res, next) => {
 //skapa routern
 app.use('/api/v1/projects', todoRoutes)
 
-//post route middleware // om jag inte lägger till en endpoint i end.use så blir det 404.
+//post route middleware // om jag inte lägger till en endpoint i end.use så blir det 404. Länkar in views
 app.use((req, res) => {
+	const isApiPath = req.path.startsWith('/api/')
+
+	if (isApiPath) return res.sendStatus(404) //skickar 404-fel man går till /api/
+
 	return res.sendFile(path.join(__dirname, './views/notFound.html'))
+})
+
+app.use((error, req, res, next) => {
+	return res.json(error.message)
 })
 
 // 2. starta server
