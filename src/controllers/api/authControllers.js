@@ -1,7 +1,7 @@
-const { BadRequestError, UnauthenticatedError } = require('../utils/errors') //UnauthenticatedError
+const { BadRequestError, UnauthenticatedError } = require('../../utils/errors') //UnauthenticatedError
 const bcrypt = require('bcrypt') //ett bibiliotke som hjälper att hash salt lösen (algoritm)
-const User = require('../models/User') //importera user model SCHEMAT.
-const { userRoles } = require('../constants/users') //rollerna enum
+const User = require('../../models/User') //importera user model SCHEMAT.
+const { userRoles } = require('../../constants/users') //rollerna enum
 const jwt = require('jsonwebtoken') //JWT TOKENS
 
 exports.register = async (req, res) => {
@@ -59,22 +59,21 @@ exports.login = async (req, res) => {
 		throw new UnauthenticatedError('Invalid credentials')
 	}
 
-	// Skapa våran JWT token (header, payload och signature) detta är den decodade
+	// Skapa våran JWT token
 	const jwtPayload = {
-		userId: user._id, //id
-		role: user.role, //admin eller inte
-		username: user.username, //username
+		userId: user._id,
+		role: user.role,
+		username: user.username,
 	}
 
 	const token = jwt.sign(jwtPayload, process.env.JWT_SECRET, {
-		//här encodas token till hemliga stringen
 		//när min token går ut
 		expiresIn: /* '1d' */ '2h',
 	})
 
 	// Response i postman?
 	return res.json({
-		token: token, //ger tilbaka vår krypterade token användare kan använda för att logga in
-		user: jwtPayload, //våran payload men infon.
+		token: token,
+		user: jwtPayload,
 	})
 }
