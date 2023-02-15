@@ -3,13 +3,14 @@ require('express-async-errors') //hjälper till med att wrappa och fånga upp er
 const express = require('express')
 const mongoose = require('mongoose')
 const todoRoutes = require('./routes/todoRoutes')
+const apiRoutes = require('./routes/api')
 const path = require('path')
 const { json } = require('express')
 
 // 1.skapa våran express app
 const app = express() //innehåller alla methods vi kommer använda efteråt
 
-app.use(express.json())
+app.use(express.json()) // ger en body till req.body (måste ha)
 
 // 3. sätt upp våran middleware. för att hålla koll på vilka request som kommer in
 app.use((req, res, next) => {
@@ -22,6 +23,7 @@ app.use((req, res, next) => {
 
 //skapa routern
 app.use('/api/v1/projects', todoRoutes)
+app.use('/api/v1', apiRoutes)
 
 //post route middleware // om jag inte lägger till en endpoint i end.use så blir det 404. Länkar in views
 app.use((req, res) => {

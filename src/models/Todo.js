@@ -15,4 +15,17 @@ const TodoSchema = new mongoose.Schema( //skapa mongoose schema. /namnet här sk
 	{ timestamps: true }
 )
 
+const PrivateSchema = new mongoose.Schema({
+	homeTasks: {
+		type: String,
+	},
+})
+const WorkSchema = new mongoose.Schema({
+	workTasks: {
+		type: String,
+	},
+})
+
 module.exports = mongoose.model('Todo', TodoSchema) //koppla ihop schemat. Gör om vårat schema till en model och exporterar den.
+// module.exports = mongoose.model('Home', PrivateSchema)
+// module.exports = mongoose.model('Work', WorkSchema)

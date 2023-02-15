@@ -45,6 +45,7 @@ exports.createNewTodo = async (req, res, next) => {
 		return res.status(400).json({
 			message: 'You must provide a name',
 		}) //Skapar ny todo
+
 	const newTodo = await Todo.create({
 		todo: todo,
 		done: done,
@@ -62,11 +63,9 @@ exports.updateTodoById = async (req, res, next) => {
 	const projectToUpdate = await Todo.findById(projectId)
 	//if no name or description respond with bad request
 	if (!todo && !done)
-		return res.sendStatus(404).json({
-			message: 'youy must provide a todo and if it is done',
-		})
-	//if no project respond with no found
-	if (!projectToUpdate) return res.sendStatus(404)
+		if (!projectToUpdate)
+			//if no project respond with no found
+			return res.sendStatus(404)
 	//update project
 	if (todo) projectToUpdate.todo = todo
 	if (done) projectToUpdate.done = done
